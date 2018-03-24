@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'aws_infra_mapper'
+AwsInfraMapper.main
