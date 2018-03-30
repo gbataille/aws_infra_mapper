@@ -25,7 +25,7 @@ VPCS = (1..2).map do
         image_id: Faker::Crypto.md5,
         instance_type: random_elem(INSTANCE_TYPES),
         key_name: Faker::Lorem.word,
-        count: Faker::Number.digit.to_i
+        count: Faker::Number.non_zero_digit.to_i
       }
     end
   }
@@ -48,13 +48,13 @@ def create_vpc(vpc_hash)
 
   subnet = create_subnet(vpc)
 
-  nb_instances = 0
+  instances = []
   vpc_hash[:instances].each do |instance_hash|
-    create_instance(random_elem(sgs), subnet, instance_hash)
-    nb_instances += instance_hash[:count]
+    instances_collection = create_instance(random_elem(sgs), subnet, instance_hash)
+    instances += instances_collection.to_a
   end
 
-  { vpc: vpc, sgs: sgs, nb_instances: nb_instances }
+  { vpc: vpc, sgs: sgs, instances: instances }
 end
 
 def create_sg(vpc_id, sg_hash)
