@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-def random_elem(list)
-  list[Faker::Number.between(0, list.length - 1)]
-end
-
 SECURITY_GROUP_TAGS = (1..5).map { { key: Faker::StarWars.specie, value: Faker::StarWars.planet } }
 
 MOCK_SECURITY_GROUPS = (1..5).map do
@@ -18,13 +14,6 @@ MOCK_SECURITY_GROUPS = (1..5).map do
     vpc_id: Faker::Crypto.md5
   }
 end
-
-INSTANCE_TYPES = [
-  't2.micro',
-  't2.medium',
-  'm5.large',
-  'c5.9xlarge'
-].freeze
 
 INSTANCE_STATES = [
   { code: 0, name: 'pending' },

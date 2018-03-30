@@ -21,8 +21,12 @@ RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   describe '#instances' do
     subject(:ec2) { AwsInfraMapper::AwsProxy::EC2Proxy.new }
 
-    xit 'should return all the instances' do
-      expect(ec2.instances.map(&:instance_id)).to eq(MOCK_INSTANCES.map { |x| x[:instance_id] })
+    it 'should return all the instances' do
+      expect(
+        ec2.instances.to_a.length
+      ).to eq(
+        @infra.reduce(0) { |acc, vpc| acc + vpc[:nb_instances] }
+      )
     end
   end
 
