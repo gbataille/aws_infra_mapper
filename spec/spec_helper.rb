@@ -46,12 +46,9 @@ require 'support/factory_bot'
 require 'utils/aws_helper'
 require 'utils/moto_helper'
 require 'utils/spec_log_helper'
+require 'utils/utils'
 
 require 'aws_infra_mapper'
-
-def random_elem(list)
-  list[Faker::Number.between(0, list.length - 1)]
-end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
