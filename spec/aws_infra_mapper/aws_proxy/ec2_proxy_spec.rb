@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 require_relative 'aws_proxy_factories'
-require_relative 'ec2_proxy_factories'
 
 RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   before(:all) do
