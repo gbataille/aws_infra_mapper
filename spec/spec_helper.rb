@@ -49,6 +49,7 @@ require 'utils/spec_log_helper'
 require 'utils/utils'
 
 require 'aws_infra_mapper'
+require 'aws_infra_mapper/aws_proxy/aws_proxy_factories'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

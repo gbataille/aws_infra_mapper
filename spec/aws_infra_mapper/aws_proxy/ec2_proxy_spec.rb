@@ -2,8 +2,6 @@
 
 require 'spec_helper'
 
-require_relative 'aws_proxy_factories'
-
 RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   before(:all) do
     # Start a MOTO server
