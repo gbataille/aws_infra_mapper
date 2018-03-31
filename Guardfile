@@ -1,6 +1,6 @@
 guard :rspec, cmd: "rspec" do
   watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^spec/(.+)/(.+)_factories\.rb$})   { |m| "spec/#{m[1]}" }
+  watch(%r{^spec/(.+)/(.+)_factories\.rb$})   { 'spec' }
   watch(%r{^lib/(.+)\.rb$})                   { |m| "spec/#{m[1]}_spec.rb" }
 
   watch(%r{^spec/utils/.*\.rb$})              { 'spec' }

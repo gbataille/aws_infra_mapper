@@ -41,6 +41,8 @@ end
 
 require 'faker'
 
+require 'support/factory_bot'
+
 require 'utils/aws_helper'
 require 'utils/moto_helper'
 require 'utils/spec_log_helper'
