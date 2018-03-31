@@ -39,10 +39,17 @@ if $LOADED_FEATURES.grep(%r/spec\/spec_helper\.rb/).any?
   end
 end
 
-require 'aws_infra_mapper'
 require 'faker'
 
-ENV['AWS_TEST'] = 'true'
+require 'utils/aws_helper'
+require 'utils/moto_helper'
+require 'utils/spec_log_helper'
+
+require 'aws_infra_mapper'
+
+def random_elem(list)
+  list[Faker::Number.between(0, list.length - 1)]
+end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
