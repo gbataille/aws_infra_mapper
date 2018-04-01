@@ -10,6 +10,18 @@ def set_aws_credentials_for(aws_service, key, secret)
   set_aws_config_option_for(aws_service, :credentials, Aws::Credentials.new(key, secret))
 end
 
+def stub_describe_instances(aws_instances)
+  Aws.config[:ec2] = {
+    stub_responses: {
+      describe_instances: {
+        reservations: [{
+          instances: aws_instances
+        }]
+      }
+    }
+  }
+end
+
 private
 
 def set_aws_config_option_for(aws_service, config_key, config_value)
