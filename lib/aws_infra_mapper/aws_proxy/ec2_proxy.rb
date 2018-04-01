@@ -6,16 +6,18 @@ module AwsInfraMapper
   module AwsProxy
     class EC2Proxy
       def initialize
-        @ec2_resource = ::Aws::EC2::Resource.new
+        @ec2_client = ::Aws::EC2::Client.new
         @filters = []
       end
 
       def instances
-        @ec2_resource.instances(filters: @filters)
+        resp = @ec2_client.describe_instances(filters: @filters)
+        resp.reservations.reduce([]) { |acc, res| acc + res.instances }
       end
 
       def security_groups
-        @ec2_resource.security_groups(filters: @filters)
+        resp = @ec2_client.describe_security_groups(filters: @filters)
+        resp.security_groups
       end
 
       def add_vpc_filter(vpc_ids)
