@@ -7,6 +7,7 @@ require 'aws_infra_mapper/aws_constants'
 
 module AwsInfraMapper
   autoload :AwsProxy, 'aws_infra_mapper/aws_proxy'
+  autoload :Models, 'aws_infra_mapper/models'
 
   def self.help
     <<~HEREDOC
