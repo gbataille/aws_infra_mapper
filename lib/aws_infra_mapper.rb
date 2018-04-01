@@ -3,6 +3,7 @@
 require 'optparse'
 
 require 'aws_infra_mapper/version'
+require 'aws_infra_mapper/aws_constants'
 
 module AwsInfraMapper
   autoload :AwsProxy, 'aws_infra_mapper/aws_proxy'
