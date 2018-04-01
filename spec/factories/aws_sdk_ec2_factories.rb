@@ -19,7 +19,7 @@ FactoryBot.define do
     instance_type { random_elem(INSTANCE_TYPES) }
     key_name { Faker::HarryPotter.house }
     private_ip_address { Faker::Internet.private_ip_v4_address }
-    security_groups { build(:aws_sg_identifier) }
+    security_groups { [build(:aws_sg_identifier)] }
     state { random_elem(INSTANCE_STATES) }
     subnet_id { Faker::Crypto.md5 }
     vpc_id { Faker::Crypto.md5 }
