@@ -2,6 +2,6 @@
 
 module AwsInfraMapper
   module Services
-    autoload :EC2InstanceService, 'aws_infra_mapper/services/ec2_instance_service'
+    autoload :Aws, 'aws_infra_mapper/services/aws'
   end
 end

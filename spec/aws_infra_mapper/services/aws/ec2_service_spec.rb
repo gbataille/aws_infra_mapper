@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
+RSpec.describe AwsInfraMapper::Services::Aws::EC2Service do
   before(:all) do
     # Start a MOTO server
     # See https://github.com/spulec/moto
@@ -16,7 +16,7 @@ RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   end
 
   describe '#instances' do
-    subject(:ec2) { AwsInfraMapper::AwsProxy::EC2Proxy.new }
+    subject(:ec2) { AwsInfraMapper::Services::Aws::EC2Service.new }
 
     it 'should return all the instances' do
       expect(
@@ -51,7 +51,7 @@ RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   end
 
   describe '#security_groups' do
-    subject(:ec2) { AwsInfraMapper::AwsProxy::EC2Proxy.new }
+    subject(:ec2) { AwsInfraMapper::Services::Aws::EC2Service.new }
 
     it 'should return all the SGs' do
       expect(
