@@ -4,6 +4,7 @@ require 'optparse'
 
 require 'aws_infra_mapper/version'
 require 'aws_infra_mapper/aws_constants'
+require 'aws_infra_mapper/defaults'
 require 'aws_infra_mapper/graph_constants'
 
 module AwsInfraMapper
