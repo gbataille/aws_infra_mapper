@@ -18,6 +18,6 @@ module AwsInfraMapper
   end
 
   def self.main
-    Services::InfraMapperService.export
+    Services::InfraMapperService.new.export
   end
 end
