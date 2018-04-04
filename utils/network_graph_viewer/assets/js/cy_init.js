@@ -12,37 +12,53 @@ function loadJSON(callback) {
   xobj.send(null);
 }
 
+function get_node_classes(type) {
+  if (type === 'ec2_instance') {
+    return 'ec2_instance'
+  } else {
+    return 'default'
+  }
+}
+
+function prepare_node(node_data) {
+  return {
+    group: 'nodes',
+    data: {
+      id: node_data.label,
+      label: node_data.label,
+      raw: node_data
+    },
+    classes: get_node_classes(node_data.type)
+  }
+}
+
 // Call to function with anonymous callback
 loadJSON(function(response) {
   // Do Something with the response e.g.
   json_graph = JSON.parse(response);
 
+  nodes = json_graph.nodes.map(prepare_node);
+
   var cy = cytoscape({
     container: document.getElementById('cy'),
-    elements: [
-      {
-        data: json_graph.nodes[0],
-        classes: 'ec2_instance',
-      },
-      {
-        data: json_graph.nodes[1],
-        classes: 'ec2_instance',
-      },
-      {
-        data: json_graph.edges[0],
-      }
-    ],
+    elements: nodes,
     layout: {
       name: 'grid',
-      rows: 1
+      rows: 10
     },
     style: cytoscape.stylesheet()
       .selector('node')
         .css({
+          "content": 'data(label)',
+          "text-valign": 'bottom',
           "shape": "rectangle",
           "background-fit": "contain",
           "background-repeat": "no-repeat",
           "background-color": "white"
+        })
+      .selector('.default')
+        .css({
+          "background-color": "blue",
         })
       .selector('.ec2_instance')
         .css({

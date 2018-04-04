@@ -14,3 +14,4 @@
 mkmf.log
 gba.rb
 network.png
+utils/network_graph_viewer/data.json

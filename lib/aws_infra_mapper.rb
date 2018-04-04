@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'optparse'
 
 require 'aws_infra_mapper/version'
+require 'aws_infra_mapper/aws_constants'
+require 'aws_infra_mapper/defaults'
+require 'aws_infra_mapper/graph_constants'
+
+$LOGGER = Logger.new STDOUT
 
 module AwsInfraMapper
-  autoload :AwsProxy, 'aws_infra_mapper/aws_proxy'
+  autoload :Exporters, 'aws_infra_mapper/exporters'
+  autoload :Services, 'aws_infra_mapper/services'
 
   def self.help
     <<~HEREDOC
@@ -14,6 +21,7 @@ module AwsInfraMapper
   end
 
   def self.main
-    'foo'
+    Services::InfraMapperService.new.export
+    Services::ViewerService.new.serve
   end
 end

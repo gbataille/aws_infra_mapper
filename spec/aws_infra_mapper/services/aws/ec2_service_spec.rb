@@ -2,10 +2,7 @@
 
 require 'spec_helper'
 
-require_relative 'aws_proxy_factories'
-require_relative 'ec2_proxy_factories'
-
-RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
+RSpec.describe AwsInfraMapper::Services::Aws::EC2Service do
   before(:all) do
     # Start a MOTO server
     # See https://github.com/spulec/moto
@@ -19,7 +16,7 @@ RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   end
 
   describe '#instances' do
-    subject(:ec2) { AwsInfraMapper::AwsProxy::EC2Proxy.new }
+    subject(:ec2) { AwsInfraMapper::Services::Aws::EC2Service.new }
 
     it 'should return all the instances' do
       expect(
@@ -54,7 +51,7 @@ RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
   end
 
   describe '#security_groups' do
-    subject(:ec2) { AwsInfraMapper::AwsProxy::EC2Proxy.new }
+    subject(:ec2) { AwsInfraMapper::Services::Aws::EC2Service.new }
 
     it 'should return all the SGs' do
       expect(
@@ -89,6 +86,23 @@ RSpec.describe AwsInfraMapper::AwsProxy::EC2Proxy do
       ec2.add_raw_filter(filter)
 
       expect(ec2.security_groups.to_a.length).to eq(expected_sgs.length)
+    end
+  end
+
+  describe '#generic_client_args' do
+    subject { AwsInfraMapper::Services::Aws::EC2Service.new }
+
+    it 'should return an empty hash when no filters' do
+      expect(subject.generic_client_args).to eq({})
+    end
+
+    it 'should return a hash with the filters' do
+      filter1 = { name: 'foo', values: 'bar' }
+      filter2 = { name: 'abc', values: 'def' }
+      subject.add_raw_filter(filter1)
+      subject.add_raw_filter(filter2)
+
+      expect(subject.generic_client_args).to eq({ filters: [filter1, filter2] })
     end
   end
 end

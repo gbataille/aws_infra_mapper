@@ -2,15 +2,6 @@
 
 require 'aws-sdk-ec2'
 
-VPC_CIDRS = (0..255).map { |i| "10.0.#{i}.0/24" }
-
-INSTANCE_TYPES = [
-  't2.micro',
-  't2.medium',
-  'm5.large',
-  'c5.9xlarge'
-].freeze
-
 VPCS = (1..2).map do
   {
     cidr: random_elem(VPC_CIDRS),
