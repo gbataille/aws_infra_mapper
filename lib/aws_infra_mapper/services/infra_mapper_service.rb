@@ -11,6 +11,8 @@ module AwsInfraMapper
       end
 
       def export(work_dir = nil, filename = nil)
+        $LOGGER.info 'Retrieving the AWS data. This may take a while.'
+
         data = infra_data
 
         work_dir ||= DEFAULT_EXPORT_DIR
