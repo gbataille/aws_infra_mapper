@@ -88,4 +88,21 @@ RSpec.describe AwsInfraMapper::Services::Aws::EC2Service do
       expect(ec2.security_groups.to_a.length).to eq(expected_sgs.length)
     end
   end
+
+  describe '#generic_client_args' do
+    subject { AwsInfraMapper::Services::Aws::EC2Service.new }
+
+    it 'should return an empty hash when no filters' do
+      expect(subject.generic_client_args).to eq({})
+    end
+
+    it 'should return a hash with the filters' do
+      filter1 = { name: 'foo', values: 'bar' }
+      filter2 = { name: 'abc', values: 'def' }
+      subject.add_raw_filter(filter1)
+      subject.add_raw_filter(filter2)
+
+      expect(subject.generic_client_args).to eq({ filters: [filter1, filter2] })
+    end
+  end
 end

@@ -12,12 +12,12 @@ module AwsInfraMapper
         end
 
         def instances
-          resp = @ec2_client.describe_instances(filters: @filters)
+          resp = @ec2_client.describe_instances(generic_client_args)
           resp.reservations.reduce([]) { |acc, res| acc + res.instances }
         end
 
         def security_groups
-          resp = @ec2_client.describe_security_groups(filters: @filters)
+          resp = @ec2_client.describe_security_groups(generic_client_args)
           resp.security_groups
         end
 
@@ -27,6 +27,13 @@ module AwsInfraMapper
 
         def add_raw_filter(filter)
           @filters << filter
+        end
+
+        def generic_client_args
+          args = {}
+          args[:filters] = @filters unless @filters.empty?
+
+          args
         end
 
         private
