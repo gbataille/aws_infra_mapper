@@ -25,6 +25,7 @@ function prepare_node(node_data) {
     group: 'nodes',
     data: {
       id: node_data.label,
+      label: node_data.label,
       raw: node_data
     },
     classes: get_node_classes(node_data.type)
@@ -43,11 +44,13 @@ loadJSON(function(response) {
     elements: nodes,
     layout: {
       name: 'grid',
-      rows: 1
+      rows: 10
     },
     style: cytoscape.stylesheet()
       .selector('node')
         .css({
+          "content": 'data(label)',
+          "text-valign": 'bottom',
           "shape": "rectangle",
           "background-fit": "contain",
           "background-repeat": "no-repeat",
