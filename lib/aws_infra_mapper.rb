@@ -12,6 +12,7 @@ $LOGGER = Logger.new STDOUT
 
 module AwsInfraMapper
   autoload :Exporters, 'aws_infra_mapper/exporters'
+  autoload :GraphBuilders, 'aws_infra_mapper/graph_builders'
   autoload :Services, 'aws_infra_mapper/services'
 
   def self.help
