@@ -5,6 +5,8 @@
 This project is in its infancy. It does something already (check the CHANGELOG) and it is enough for
 you to have a look, but it currently brings limited value
 
+![Infra Map](doc/screenshots/map_overview.png)
+
 # Running
 
 Simply launch
