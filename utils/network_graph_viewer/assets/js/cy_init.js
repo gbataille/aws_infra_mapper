@@ -32,19 +32,30 @@ function prepare_node(node_data) {
   }
 }
 
+function prepare_edge(edge_data) {
+  return {
+    group: 'edges',
+    data: {
+      source: edge_data.source,
+      target: edge_data.target,
+      raw: edge_data.data
+    }
+  }
+}
+
 // Call to function with anonymous callback
 loadJSON(function(response) {
   // Do Something with the response e.g.
   json_graph = JSON.parse(response);
 
   nodes = json_graph.nodes.map(prepare_node);
+  edges = json_graph.edges.map(prepare_edge);
 
   var cy = cytoscape({
     container: document.getElementById('cy'),
-    elements: nodes,
+    elements: nodes.concat(edges),
     layout: {
-      name: 'grid',
-      rows: 10
+      name: 'breadthfirst'
     },
     style: cytoscape.stylesheet()
       .selector('node')

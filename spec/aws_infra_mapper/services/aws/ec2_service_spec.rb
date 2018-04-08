@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe AwsInfraMapper::Services::Aws::EC2Service do
   before(:all) do
     # Start a MOTO server
@@ -102,7 +100,7 @@ RSpec.describe AwsInfraMapper::Services::Aws::EC2Service do
       subject.add_raw_filter(filter1)
       subject.add_raw_filter(filter2)
 
-      expect(subject.generic_client_args).to eq({ filters: [filter1, filter2] })
+      expect(subject.generic_client_args).to eq(filters: [filter1, filter2])
     end
   end
 end
