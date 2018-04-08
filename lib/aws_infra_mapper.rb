@@ -28,6 +28,14 @@ module AwsInfraMapper
     end
 
     def configure
+      OptionParser.new do |opts|
+        opts.banner = help
+
+        opts.on("-h", "--help", "Print this documentation") do
+          puts opts
+          exit
+        end
+      end.parse!
     end
 
     def main
