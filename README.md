@@ -1,5 +1,10 @@
 # AwsInfraMapper
 
+# Disclaimer
+
+This project is in its infancy. It does something already (check the CHANGELOG) and it is enough for
+you to have a look, but it currently brings limited value
+
 # Running
 
 Simply launch
@@ -7,8 +12,8 @@ Simply launch
 aws_infra_mapper
 ```
 after making sure your aws credentials are setup (through common means, like env variables or config
-file. Check out [aws-vault](https://github.com/99designs/aws-vault) for a nice way to manage your
-credentials on your local computer)
+file. _Check out [aws-vault](https://github.com/99designs/aws-vault) for a nice way to manage your
+credentials on your local computer)_
 
 This will scrap the data from your AWS account, create a JSON representing your datacenter as a
 graph and finally start a small HTTP server to view your datacenter and interact with it.
