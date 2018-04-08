@@ -19,9 +19,7 @@ RSpec.describe AwsInfraMapper::AwsInfraMapper do
     context 'when asking for the help' do
       context 'with shorthand config' do
         before(:each) do
-          # rubocop: disable Style/MutableConstant
           ARGV.replace ['-h']
-          # rubocop: enable Style/MutableConstant
         end
 
         it 'should display the help' do
@@ -42,6 +40,36 @@ RSpec.describe AwsInfraMapper::AwsInfraMapper do
           subject.main
 
           expect(subject).to have_received(:display_help_and_exit)
+        end
+      end
+    end
+
+    context 'when passing a config file' do
+      context 'with shorthand config' do
+        let(:file_path) { Faker::File.file_name }
+
+        before(:each) do
+          ARGV.replace ['-c', file_path]
+        end
+
+        it 'should use the passed config file and not the default' do
+          subject.main
+
+          expect(subject.instance_variable_get(:@options)[OPTION_CONFIG_FILE]).to eq(file_path)
+        end
+      end
+
+      context 'with longhand config' do
+        let(:file_path) { Faker::File.file_name }
+
+        before(:each) do
+          ARGV.replace ['--config-file', file_path]
+        end
+
+        it 'should use the passed config file and not the default' do
+          subject.main
+
+          expect(subject.instance_variable_get(:@options)[OPTION_CONFIG_FILE]).to eq(file_path)
         end
       end
     end

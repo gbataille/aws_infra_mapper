@@ -6,7 +6,8 @@ require 'pathname'
 module AwsInfraMapper
   module Services
     class InfraMapperService
-      def initialize
+      def initialize(opts = {})
+        @options = opts
         @ec2_service = Aws::EC2Service.new
         load_data
       end

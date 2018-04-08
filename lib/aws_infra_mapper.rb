@@ -53,7 +53,7 @@ module AwsInfraMapper
       OptionParser.new do |opts|
         opts.banner = help
 
-        opts.on_head('-c', '--config-file', 'Path to the configuration file') do |c|
+        opts.on_head('-c', '--config-file=FILE_PATH', 'Path to the configuration file') do |c|
           @options[OPTION_CONFIG_FILE] = c
         end
 
@@ -64,7 +64,7 @@ module AwsInfraMapper
     end
 
     def graph
-      Services::InfraMapperService.new.export
+      Services::InfraMapperService.new.export @options
       Services::ViewerService.new.serve
     end
   end
