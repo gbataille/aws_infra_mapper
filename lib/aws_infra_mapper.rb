@@ -5,6 +5,7 @@ require 'optparse'
 
 require 'aws_infra_mapper/version'
 require 'aws_infra_mapper/aws_constants'
+require 'aws_infra_mapper/config_constants'
 require 'aws_infra_mapper/defaults'
 require 'aws_infra_mapper/graph_constants'
 
@@ -21,26 +22,45 @@ module AwsInfraMapper
   end
 
   class AwsInfraMapper
+    def main
+      @options = {}
+
+      set_defaults
+      configure
+      graph
+    end
+
+    private
+
     def help
       <<~HEREDOC
         Usage: aws_infra_mapper [options]
       HEREDOC
     end
 
+    def display_help_and_exit(opts)
+      puts opts
+      exit
+    end
+
+    def set_defaults
+      @options = {
+        OPTION_CONFIG_FILE => "#{ENV['HOME']}/.aws_infra_mapperrc"
+      }
+    end
+
     def configure
       OptionParser.new do |opts|
         opts.banner = help
 
-        opts.on("-h", "--help", "Print this documentation") do
-          puts opts
-          exit
+        opts.on_head('-c', '--config-file', 'Path to the configuration file') do |c|
+          @options[OPTION_CONFIG_FILE] = c
+        end
+
+        opts.on_tail('-h', '--help', 'Print this documentation') do
+          display_help_and_exit opts
         end
       end.parse!
-    end
-
-    def main
-      configure
-      graph
     end
 
     def graph
