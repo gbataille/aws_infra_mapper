@@ -15,14 +15,29 @@ module AwsInfraMapper
   autoload :GraphBuilders, 'aws_infra_mapper/graph_builders'
   autoload :Services, 'aws_infra_mapper/services'
 
-  def self.help
-    <<~HEREDOC
-      Usage: aws_infra_mapper [options]
-    HEREDOC
+  def self.main
+    mapper = AwsInfraMapper.new
+    mapper.main
   end
 
-  def self.main
-    Services::InfraMapperService.new.export
-    Services::ViewerService.new.serve
+  class AwsInfraMapper
+    def help
+      <<~HEREDOC
+        Usage: aws_infra_mapper [options]
+      HEREDOC
+    end
+
+    def configure
+    end
+
+    def main
+      configure
+      graph
+    end
+
+    def graph
+      Services::InfraMapperService.new.export
+      Services::ViewerService.new.serve
+    end
   end
 end
