@@ -1,22 +1,26 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'aws_infra_mapper/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "aws_infra_mapper"
+  spec.name          = 'aws_infra_mapper'
   spec.version       = AwsInfraMapper::VERSION
-  spec.authors       = ["Grégory Bataille"]
-  spec.email         = ["gregory.bataille@gmail.com"]
-  spec.summary       = "A simple CLI tool to visualize your AWS infrastructure"
-  spec.description   = ""
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.authors       = ['Grégory Bataille']
+  spec.email         = ['gregory.bataille@gmail.com']
+  spec.summary       = 'A simple CLI tool to visualize your AWS infrastructure'
+  spec.description   = ''
+  spec.homepage      = ''
+  spec.license       = 'MIT'
 
-  spec.files         = Dir['README.md', 'bin/aws_infra_mapper', '{lib,spec}/**/*.rb', 'utils/**/*.*']
+  spec.files         = Dir[
+    'README.md', 'bin/aws_infra_mapper', '{lib,spec}/**/*.rb', 'utils/**/*.*'
+  ]
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'aws-sdk', '~> 3.0'
   spec.add_runtime_dependency 'colorize', '~> 0.8'
