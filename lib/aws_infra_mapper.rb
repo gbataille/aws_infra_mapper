@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'logger'
+require 'mustache'
 require 'optparse'
 
 require 'aws_infra_mapper/version'
