@@ -14,6 +14,7 @@ $LOGGER = Logger.new STDOUT
 module AwsInfraMapper
   autoload :Exporters, 'aws_infra_mapper/exporters'
   autoload :GraphBuilders, 'aws_infra_mapper/graph_builders'
+  autoload :Models, 'aws_infra_mapper/models'
   autoload :Services, 'aws_infra_mapper/services'
 
   def self.main
@@ -61,10 +62,12 @@ module AwsInfraMapper
           display_help_and_exit opts
         end
       end.parse!
+
+      @conf = Models::Config.new @options[OPTION_CONFIG_FILE]
     end
 
     def graph
-      Services::InfraMapperService.new.export @options
+      Services::InfraMapperService.new(@conf).export
       Services::ViewerService.new.serve
     end
   end

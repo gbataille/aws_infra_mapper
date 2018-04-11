@@ -8,6 +8,8 @@ require 'tmpdir'
 require 'spec_helper'
 
 RSpec.describe AwsInfraMapper::Services::InfraMapperService do
+  let(:conf) { AwsInfraMapper::Models::Config.new }
+
   before(:each) do
     # Use mock AWS data throughout the tests
     stub_describe_instances([])
@@ -25,7 +27,7 @@ RSpec.describe AwsInfraMapper::Services::InfraMapperService do
     let(:filepath) { Pathname.new(@tmp_dir).join(DEFAULT_EXPORT_FILENAME) }
 
     before(:each) do
-      AwsInfraMapper::Services::InfraMapperService.new.export(@tmp_dir)
+      AwsInfraMapper::Services::InfraMapperService.new(conf).export(@tmp_dir)
     end
 
     context 'always (incl. without any data)' do
@@ -58,7 +60,7 @@ RSpec.describe AwsInfraMapper::Services::InfraMapperService do
   end
 
   describe '#infra_data' do
-    subject { AwsInfraMapper::Services::InfraMapperService.new.infra_data }
+    subject { AwsInfraMapper::Services::InfraMapperService.new(conf).infra_data }
 
     context 'always (incl. without any data)' do
       it 'should contain nodes and edges' do

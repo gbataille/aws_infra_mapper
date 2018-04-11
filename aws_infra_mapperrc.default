@@ -1,0 +1,7 @@
+---
+ec2_instance:
+# You can use any Aws::EC2::Types::Instance attributes here (typically instance_id, state, ...)
+# Additionally you can use any instance tag using the form tag_TAGKEY (where TAGKEY is the key of
+# the tag). tag_TAGKEY will be replaced by the value of the tag
+  ec2_instance_label: "{{instance_id}}"
+  # e.g. ec2_instance_label: "{{tag_Name}}"

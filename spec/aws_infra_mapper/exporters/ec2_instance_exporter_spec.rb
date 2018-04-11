@@ -4,7 +4,10 @@ RSpec.describe AwsInfraMapper::Exporters::EC2InstanceExporter do
   describe '#as_node' do
     let(:aws_instance) { build(:aws_ec2_instance) }
 
-    subject(:node) { AwsInfraMapper::Exporters::EC2InstanceExporter.as_node(aws_instance) }
+    let(:conf) { AwsInfraMapper::Models::Config.new('') }
+    subject(:node) do
+      AwsInfraMapper::Exporters::EC2InstanceExporter.new.as_node(aws_instance, conf)
+    end
 
     it 'should have the correct node type' do
       expect(subject[NODE_KEY_TYPE]).to eq(NODE_TYPE_EC2_INSTANCE)
