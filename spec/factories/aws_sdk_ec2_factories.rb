@@ -22,6 +22,7 @@ FactoryBot.define do
     security_groups { (1..Faker::Number.non_zero_digit.to_i).map { build(:aws_sg_identifier) } }
     state { random_elem(INSTANCE_STATES) }
     subnet_id { Faker::Crypto.md5 }
+    tags []
     vpc_id { Faker::Crypto.md5 }
   end
 
@@ -47,5 +48,10 @@ FactoryBot.define do
     vpc_id { Faker::Crypto.md5 }
     ip_permissions { random_sized_list { build(:aws_ip_permission) } }
     # ip_permissions_egress { random_sized_list { build(:aws_ip_permission) } }
+  end
+
+  factory :tag, class: Aws::EC2::Types::Tag do
+    key { Faker::HowIMetYourMother.character }
+    value { Faker::HowIMetYourMother.high_five }
   end
 end

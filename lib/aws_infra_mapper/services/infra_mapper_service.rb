@@ -6,7 +6,8 @@ require 'pathname'
 module AwsInfraMapper
   module Services
     class InfraMapperService
-      def initialize
+      def initialize(conf)
+        @conf = conf
         @ec2_service = Aws::EC2Service.new
         load_data
       end
@@ -52,7 +53,7 @@ module AwsInfraMapper
       end
 
       def instance_nodes
-        GraphBuilders::EC2InstanceGraphBuilder.new.build_nodes(@ec2_instances)
+        GraphBuilders::EC2InstanceGraphBuilder.new.build_nodes(@ec2_instances, @conf)
       end
     end
   end

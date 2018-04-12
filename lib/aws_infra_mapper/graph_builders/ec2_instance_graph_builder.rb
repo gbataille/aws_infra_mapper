@@ -3,8 +3,8 @@
 module AwsInfraMapper
   module GraphBuilders
     class EC2InstanceGraphBuilder < BaseGraphBuilder
-      def build_nodes(instances, *)
-        instances.map { |i| Exporters::EC2InstanceExporter.as_node(i) }.to_a
+      def build_nodes(instances, conf, *)
+        instances.map { |i| Exporters::EC2InstanceExporter.new.as_node(i, conf) }.to_a
       end
 
       def build_edges(instances, security_groups, *)
