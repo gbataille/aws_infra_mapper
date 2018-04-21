@@ -15,6 +15,8 @@ function loadJSON(callback) {
 function get_node_classes(type) {
   if (type === 'ec2_instance') {
     return 'ec2_instance'
+  } else if (type === 'ec2_instances_cluster') {
+    return 'ec2_instances_cluster'
   } else {
     return 'default'
   }
@@ -73,6 +75,10 @@ loadJSON(function(response) {
       .selector('.ec2_instance')
         .css({
           "background-image": "url('/assets/icons/aws/EC2_instance.png')",
+        })
+      .selector('.ec2_instances_cluster')
+        .css({
+          "background-image": "url('/assets/icons/aws/EC2_instances_cluster.png')",
         })
   });
 
