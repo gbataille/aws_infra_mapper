@@ -36,6 +36,10 @@ module AwsInfraMapper
           args
         end
 
+        def self.instance_meta_dict(ec2_instance)
+          ec2_instance.to_h.merge!(EC2Service.tag_for_rendering(ec2_instance))
+        end
+
         private
 
         def add_filter_with_name(name, filter_values)
@@ -43,6 +47,13 @@ module AwsInfraMapper
             name: name,
             values: filter_values
           }
+        end
+
+        def self.tag_for_rendering(ec2_instance)
+          ec2_instance.tags.each_with_object({}) do |tag, h|
+            h.store("tag_#{tag.key}", tag.value)
+            h
+          end
         end
       end
     end

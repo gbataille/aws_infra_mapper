@@ -4,7 +4,10 @@ module AwsInfraMapper
   module GraphBuilders
     class EC2InstanceGraphBuilder < BaseGraphBuilder
       def build_nodes(instances, conf, *)
-        instances.map { |i| Exporters::EC2InstanceExporter.new.as_node(i, conf) }.to_a
+        label_tmpl = conf.ec2_instance_label
+        dedup = conf.dedup_ec2_instances
+
+        dedup ? deduped_instances(instances, label_tmpl) : all_ec2_instances(instances, label_tmpl)
       end
 
       def build_edges(instances, security_groups, *)
@@ -44,6 +47,26 @@ module AwsInfraMapper
             end
           end
         end
+      end
+
+      def deduped_instances(instances, label_tmpl)
+        exporter = Exporters::EC2InstanceExporter.new
+        idx = instances.each_with_object({}) do |instance, uniq|
+          label = exporter.node_label(instance, label_tmpl)
+          if uniq.key? label
+            uniq[label][NODE_KEY_TYPE] = NODE_TYPE_EC2_INSTANCES_CLUSTER
+          else
+            uniq.merge!(label => exporter.as_node(instance, label_tmpl))
+          end
+        end
+        idx.values
+      end
+
+      def all_ec2_instances(instances, label_tmpl)
+        exporter = Exporters::EC2InstanceExporter.new
+        instances.map do |i|
+          exporter.as_node(i, label_tmpl)
+        end.to_a
       end
     end
   end
