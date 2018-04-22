@@ -2,9 +2,8 @@
 
 FactoryBot.define do
   factory :config, class: AwsInfraMapper::Models::Config do
-
     # Handling post init attributes
-    ignore do
+    transient do
       ec2_instance_label '{{instance_id}}'
     end
 

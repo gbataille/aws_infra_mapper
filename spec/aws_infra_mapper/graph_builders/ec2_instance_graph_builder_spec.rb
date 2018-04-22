@@ -69,7 +69,11 @@ RSpec.describe AwsInfraMapper::GraphBuilders::EC2InstanceGraphBuilder do
 
     it 'should map instances properly' do
       expect(
-        subject.build_edges([src_instance, dest_instance_1, dest_instance_2], [sg_src, sg_to])
+        subject.build_edges(
+          [src_instance, dest_instance_1, dest_instance_2],
+          [sg_src, sg_to],
+          [src_instance.instance_id, dest_instance_1.instance_id, dest_instance_2.instance_id]
+        )
       ).to eq(
         [
           {
@@ -80,6 +84,24 @@ RSpec.describe AwsInfraMapper::GraphBuilders::EC2InstanceGraphBuilder do
           {
             NODE_KEY_SOURCE => src_instance.instance_id,
             NODE_KEY_TARGET => dest_instance_2.instance_id,
+            NODE_KEY_DATA => nil
+          }
+        ]
+      )
+    end
+
+    it 'should take the node filter into account' do
+      expect(
+        subject.build_edges(
+          [src_instance, dest_instance_1, dest_instance_2],
+          [sg_src, sg_to],
+          [src_instance.instance_id, dest_instance_1.instance_id]
+        )
+      ).to eq(
+        [
+          {
+            NODE_KEY_SOURCE => src_instance.instance_id,
+            NODE_KEY_TARGET => dest_instance_1.instance_id,
             NODE_KEY_DATA => nil
           }
         ]

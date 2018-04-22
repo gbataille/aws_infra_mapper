@@ -10,22 +10,33 @@ module AwsInfraMapper
         dedup ? deduped_instances(instances, label_tmpl) : all_ec2_instances(instances, label_tmpl)
       end
 
-      def build_edges(instances, security_groups, *)
+      def build_edges(aws_instances, security_groups, filtered_node_ids, *)
         routes = []
-        idx = index_instances_by_sg(instances)
+        idx = index_instances_by_sg(aws_instances)
 
         sg_to_sg_map(security_groups).each do |sg_map|
-          idx[sg_map[:from]].each do |instance_src|
-            idx[sg_map[:to]].each do |instance_dest|
-              routes << { source: instance_src.instance_id, target: instance_dest.instance_id }
-            end
-          end
+          pairs = build_instances_connection(
+            sg_map[:from], sg_map[:to], idx, filtered_node_ids
+          )
+          routes.concat(
+            pairs.map { |pair| { source: pair[0].instance_id, target: pair[1].instance_id } }
+          )
         end
 
         routes.map { |r| Exporters::AwsRouteExporter.as_edge(r) }
       end
 
       private
+
+      def build_instances_connection(sg_from, sg_to, idx_instances_by_sg, filtered_node_ids)
+        src_instances = idx_instances_by_sg[sg_from]
+        dest_instances = idx_instances_by_sg[sg_to]
+
+        src_instances.keep_if { |i| filtered_node_ids.include? i.instance_id }
+        dest_instances.keep_if { |i| filtered_node_ids.include? i.instance_id }
+
+        src_instances.product(dest_instances)
+      end
 
       def index_instances_by_sg(instances)
         index = instances.reduce({}) do |idx, instance|
