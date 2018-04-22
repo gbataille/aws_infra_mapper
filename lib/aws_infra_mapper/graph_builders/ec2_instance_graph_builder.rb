@@ -65,12 +65,24 @@ module AwsInfraMapper
         idx = instances.each_with_object({}) do |instance, uniq|
           label = exporter.node_label(instance, label_tmpl)
           if uniq.key? label
-            uniq[label][NODE_KEY_TYPE] = NODE_TYPE_EC2_INSTANCES_CLUSTER
+            upgrade_cluster_node uniq[label]
           else
             uniq.merge!(label => exporter.as_node(instance, label_tmpl))
           end
         end
         idx.values
+      end
+
+      def upgrade_cluster_node(node)
+        type = node[NODE_KEY_TYPE]
+        if type == NODE_TYPE_EC2_INSTANCE
+          node[NODE_KEY_TYPE] = NODE_TYPE_EC2_INSTANCES_CLUSTER
+          node[NODE_KEY_LABEL] += ' (2)'
+        else
+          node[NODE_KEY_LABEL].sub!(/(.*)\s\((\d+)\)/) do
+            "#{Regexp.last_match(1)} (#{Regexp.last_match(2).to_i + 1})"
+          end
+        end
       end
 
       def all_ec2_instances(instances, label_tmpl)

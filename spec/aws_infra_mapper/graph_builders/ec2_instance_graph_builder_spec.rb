@@ -111,7 +111,6 @@ RSpec.describe AwsInfraMapper::GraphBuilders::EC2InstanceGraphBuilder do
 
   describe '#deduped_instaces' do
     it 'should use the instance_label to collapse similar instances' do
-      exporter = AwsInfraMapper::Exporters::EC2InstanceExporter.new
       label_tmpl = '{{image_id}}-foo-{{key_name}}'
       aws_ec2_instance1 = build(:aws_ec2_instance)
       aws_ec2_instance1bis = build(:aws_ec2_instance,
@@ -128,12 +127,26 @@ RSpec.describe AwsInfraMapper::GraphBuilders::EC2InstanceGraphBuilder do
         label_tmpl
       )
       expect(result.length).to eq(2)
-      expect(result).to eq(
-        [
-          exporter.as_node(aws_ec2_instance1, label_tmpl, NODE_TYPE_EC2_INSTANCES_CLUSTER),
-          exporter.as_node(aws_ec2_instance2, label_tmpl)
-        ]
+    end
+
+    it 'should indicate the number of instances in the cluster in the label' do
+      label_tmpl = '{{image_id}}-foo-{{key_name}}'
+      aws_ec2_instance1 = build(:aws_ec2_instance)
+      aws_ec2_instance1bis = build(:aws_ec2_instance,
+                                   image_id: aws_ec2_instance1.image_id,
+                                   key_name: aws_ec2_instance1.key_name)
+      aws_ec2_instance1ter = build(:aws_ec2_instance,
+                                   image_id: aws_ec2_instance1.image_id,
+                                   key_name: aws_ec2_instance1.key_name)
+      aws_ec2_instance2 = build(:aws_ec2_instance)
+
+      result = subject.send(
+        :deduped_instances,
+        [aws_ec2_instance1, aws_ec2_instance1bis, aws_ec2_instance1ter, aws_ec2_instance2],
+        label_tmpl
       )
+      expect(result[0][NODE_KEY_LABEL]).to include('(3)')
+      expect(result[0][NODE_KEY_LABEL]).not_to include('(2)')
     end
   end
 end
