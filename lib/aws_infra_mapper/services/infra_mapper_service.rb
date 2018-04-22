@@ -49,7 +49,10 @@ module AwsInfraMapper
       end
 
       def instance_edges
-        GraphBuilders::EC2InstanceGraphBuilder.new.build_edges(@ec2_instances, @security_groups)
+        node_ids = instance_nodes.map { |i| i[NODE_KEY_ID] }
+        GraphBuilders::EC2InstanceGraphBuilder.new.build_edges(
+          @ec2_instances, @security_groups, node_ids
+        )
       end
 
       def instance_nodes

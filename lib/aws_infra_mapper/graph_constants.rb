@@ -10,6 +10,7 @@ NODE_KEY_TARGET_LABEL = 'target_label'
 NODE_KEY_DATA = 'data'
 
 NODE_TYPE_EC2_INSTANCE = 'ec2_instance'
+NODE_TYPE_EC2_INSTANCES_CLUSTER = 'ec2_instances_cluster'
 
 GRAPH_DATA_NODES_KEY = 'nodes'
 GRAPH_DATA_EDGES_KEY = 'edges'

@@ -1,7 +1,15 @@
+# vim: set ft=yaml:
 ---
 ec2_instance:
 # You can use any Aws::EC2::Types::Instance attributes here (typically instance_id, state, ...)
 # Additionally you can use any instance tag using the form tag_TAGKEY (where TAGKEY is the key of
 # the tag). tag_TAGKEY will be replaced by the value of the tag
-  ec2_instance_label: "{{instance_id}}"
-  # e.g. ec2_instance_label: "{{tag_Name}}"
+  ec2_instance_label: "{{tag_Name}}-{{instance_id}}"
+
+  # Some instances have similar feature as far as the high level network view is considered because
+  # they are basically part of a cluster where each machine renders the same service. All the ec2
+  # instance for which the `ec2_instance_label` is the same will be collapsed in a single node
+  # in the graph if `dedup_ec2_instances` is set to true
+  # Careful, no check is performed to see if those are similar (same network access, ...). It's your
+  # responsibility to set the `ec2_instance_label` properly if you want to use that feature
+  dedup_ec2_instances: true

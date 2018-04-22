@@ -5,7 +5,7 @@ require 'yaml'
 module AwsInfraMapper
   module Models
     class Config
-      attr_reader :ec2_instance_label
+      attr_reader :dedup_ec2_instances, :ec2_instance_label
 
       def initialize(file_path = nil)
         if file_path.nil? || !File.exist?(file_path)
@@ -28,6 +28,7 @@ module AwsInfraMapper
 
       def parse_config(conf)
         @ec2_instance_label = conf.dig(CONF_EC2_INSTANCE, CONF_EC2_INSTANCE_LABEL)
+        @dedup_ec2_instances = conf.dig(CONF_EC2_INSTANCE, CONF_DEDUP_EC2_INSTANCES)
       end
     end
   end

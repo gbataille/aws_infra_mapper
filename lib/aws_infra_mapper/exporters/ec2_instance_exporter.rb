@@ -3,27 +3,18 @@
 module AwsInfraMapper
   module Exporters
     class EC2InstanceExporter
-      def as_node(ec2_instance, conf, *)
+      def as_node(ec2_instance, label_tmpl, node_type = NODE_TYPE_EC2_INSTANCE)
         ## Takes an Aws::EC2::Types::Instance and turn it into a generic graph node
         {
           NODE_KEY_ID => ec2_instance.instance_id,
-          NODE_KEY_TYPE => NODE_TYPE_EC2_INSTANCE,
-          NODE_KEY_LABEL => node_label(ec2_instance, conf)
+          NODE_KEY_TYPE => node_type,
+          NODE_KEY_LABEL => node_label(ec2_instance, label_tmpl),
+          NODE_KEY_DATA => ec2_instance
         }
       end
 
-      private
-
-      def node_label(ec2_instance, conf)
-        instance_attributes = ec2_instance.to_h.merge!(tag_for_rendering(ec2_instance))
-        Mustache.render(conf.ec2_instance_label, instance_attributes)
-      end
-
-      def tag_for_rendering(ec2_instance)
-        ec2_instance.tags.each_with_object({}) do |tag, h|
-          h.store("tag_#{tag.key}", tag.value)
-          h
-        end
+      def node_label(ec2_instance, label_tmpl)
+        Mustache.render(label_tmpl, Services::Aws::EC2Service.instance_meta_dict(ec2_instance))
       end
     end
   end
