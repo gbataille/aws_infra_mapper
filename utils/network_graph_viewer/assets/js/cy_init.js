@@ -52,8 +52,8 @@ loadJSON(function(response) {
   nodes = json_graph.nodes.map(prepare_node);
   edges = json_graph.edges.map(prepare_edge);
 
-  var cy = cytoscape({
-    container: document.getElementById('cy'),
+  window.cy = cytoscape({
+    container: document.getElementById('cy-container'),
     elements: nodes.concat(edges),
     layout: {
       name: 'random'
@@ -81,5 +81,34 @@ loadJSON(function(response) {
           "background-image": "url('/assets/icons/aws/EC2_instances_cluster.png')",
         })
   });
+  var makeTippy = function(node, text){
+    return tippy( node.popperRef(), {
+      html: (function(){
+        var div = document.createElement('div');
 
+        div.innerHTML = text;
+
+        return div;
+      })(),
+      trigger: 'manual',
+      arrow: true,
+      placement: 'bottom',
+      hideOnClick: false,
+      multiple: false,
+      sticky: true
+    } ).tooltips[0];
+  };
+
+  cy.$('node').each(function(node, idx) {
+    node.data('tooltip', makeTippy(node, JSON.stringify(node.data('raw'))));
+  });
+
+  window.cy.on('tap', 'node', function(event) {
+    tooltip = this.data('tooltip');
+    if (tooltip.state.visible) {
+      tooltip.hide()
+    } else {
+      tooltip.show();
+    }
+  });
 });
