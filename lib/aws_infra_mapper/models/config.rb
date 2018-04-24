@@ -9,8 +9,10 @@ module AwsInfraMapper
 
       def initialize(file_path = nil)
         if file_path.nil? || !File.exist?(file_path)
-          $LOGGER.warn "Configuration file #{file_path} does not exists. Using defaults."
+          $LOGGER.debug "Configuration file #{file_path} does not exists. Using defaults."
           file_path = DEFAULT_CONFIG_FILE_PATH
+        else
+          $LOGGER.debug "Using configuration file #{file_path}"
         end
 
         conf = {}
