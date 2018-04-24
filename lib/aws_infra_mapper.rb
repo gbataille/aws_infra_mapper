@@ -19,6 +19,7 @@ module AwsInfraMapper
   autoload :Services, 'aws_infra_mapper/services'
 
   def self.main
+    $LOGGER.info "Launching AwsInfraMapper version #{VERSION}"
     mapper = AwsInfraMapper.new
     mapper.main
   end
