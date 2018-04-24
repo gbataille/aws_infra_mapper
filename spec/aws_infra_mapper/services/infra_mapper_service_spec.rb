@@ -27,7 +27,7 @@ RSpec.describe AwsInfraMapper::Services::InfraMapperService do
     let(:filepath) { Pathname.new(@tmp_dir).join(DEFAULT_EXPORT_FILENAME) }
 
     before(:each) do
-      AwsInfraMapper::Services::InfraMapperService.new(conf).export(@tmp_dir)
+      AwsInfraMapper::Services::InfraMapperService.new(conf).export(work_dir: @tmp_dir)
     end
 
     context 'always (incl. without any data)' do

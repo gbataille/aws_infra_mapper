@@ -6,13 +6,14 @@ require 'pathname'
 module AwsInfraMapper
   module Services
     class InfraMapperService
-      def initialize(conf)
+      def initialize(conf, vpc_filter: nil)
         @conf = conf
         @ec2_service = Aws::EC2Service.new
+        @ec2_service.add_vpc_filter(vpc_filter) unless vpc_filter.nil?
         load_data
       end
 
-      def export(work_dir = nil, filename = nil)
+      def export(work_dir: nil, filename: nil)
         $LOGGER.info 'Retrieving the AWS data. This may take a while.'
 
         data = infra_data

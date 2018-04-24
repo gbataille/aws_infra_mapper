@@ -26,19 +26,21 @@ module AwsInfraMapper
   end
 
   def self.banner
+    # rubocop:disable Layout/IndentHeredoc
     puts <<~'HEREDOC'
 
-       ########################################################################################
-      #   ___                ____      ____           __  ___                                #
-     #   /   |_      _______/  _/___  / __/________ _/  |/  /___ _____  ____  ___  _____    #
-    #   / /| | | /| / / ___// // __ \/ /_/ ___/ __ `/ /|_/ / __ `/ __ \/ __ \/ _ \/ ___/   #
-   #   / ___ | |/ |/ (__  )/ // / / / __/ /  / /_/ / /  / / /_/ / /_/ / /_/ /  __/ /      #
-  #   /_/  |_|__/|__/____/___/_/ /_/_/ /_/   \__,_/_/  /_/\__,_/ .___/ .___/\___/_/      #
- #                                                            /_/   /_/                 #
-########################################################################################
+         ########################################################################################
+        #   ___                ____      ____           __  ___                                #
+       #   /   |_      _______/  _/___  / __/________ _/  |/  /___ _____  ____  ___  _____    #
+      #   / /| | | /| / / ___// // __ \/ /_/ ___/ __ `/ /|_/ / __ `/ __ \/ __ \/ _ \/ ___/   #
+     #   / ___ | |/ |/ (__  )/ // / / / __/ /  / /_/ / /  / / /_/ / /_/ / /_/ /  __/ /      #
+    #   /_/  |_|__/|__/____/___/_/ /_/_/ /_/   \__,_/_/  /_/\__,_/ .___/ .___/\___/_/      #
+   #                                                            /_/   /_/                 #
+  ########################################################################################
 
 
     HEREDOC
+    # rubocop:enable Layout/IndentHeredoc
   end
 
   class AwsInfraMapper
@@ -54,6 +56,7 @@ module AwsInfraMapper
 
     def help
       <<~HEREDOC
+
         Usage: aws_infra_mapper [options]
       HEREDOC
     end
@@ -77,6 +80,12 @@ module AwsInfraMapper
           @options[OPTION_CONFIG_FILE] = c
         end
 
+        opts.on(
+          '--vpc=VPC_IDS', 'Create the graph only for those VPCs (comma separated list)'
+        ) do |vpcs|
+          @options[OPTION_VPC_FILTER] = vpcs.split(',')
+        end
+
         opts.on_tail('-h', '--help', 'Print this documentation') do
           display_help_and_exit opts
         end
@@ -86,7 +95,7 @@ module AwsInfraMapper
     end
 
     def graph
-      Services::InfraMapperService.new(@conf).export
+      Services::InfraMapperService.new(@conf, vpc_filter: @options[OPTION_VPC_FILTER]).export
       Services::ViewerService.new.serve
     end
   end
