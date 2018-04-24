@@ -19,9 +19,26 @@ module AwsInfraMapper
   autoload :Services, 'aws_infra_mapper/services'
 
   def self.main
+    banner
     $LOGGER.info "Launching AwsInfraMapper version #{VERSION}"
     mapper = AwsInfraMapper.new
     mapper.main
+  end
+
+  def self.banner
+    puts <<~'HEREDOC'
+
+       ########################################################################################
+      #   ___                ____      ____           __  ___                                #
+     #   /   |_      _______/  _/___  / __/________ _/  |/  /___ _____  ____  ___  _____    #
+    #   / /| | | /| / / ___// // __ \/ /_/ ___/ __ `/ /|_/ / __ `/ __ \/ __ \/ _ \/ ___/   #
+   #   / ___ | |/ |/ (__  )/ // / / / __/ /  / /_/ / /  / / /_/ / /_/ / /_/ /  __/ /      #
+  #   /_/  |_|__/|__/____/___/_/ /_/_/ /_/   \__,_/_/  /_/\__,_/ .___/ .___/\___/_/      #
+ #                                                            /_/   /_/                 #
+########################################################################################
+
+
+    HEREDOC
   end
 
   class AwsInfraMapper
