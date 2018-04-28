@@ -92,15 +92,36 @@ loadJSON(function(response) {
       })(),
       trigger: 'manual',
       arrow: true,
-      placement: 'bottom',
+      placement: 'right',
       hideOnClick: false,
       multiple: false,
       sticky: true
     } ).tooltips[0];
   };
 
+  var objToString = function (obj) {
+    var str = ""
+    Object.keys(obj).forEach(function(k) {
+      var data_elem = obj[k];
+      if (data_elem instanceof Object) {
+        data_str = objToString(data_elem);
+      } else {
+        data_str = data_elem
+      }
+      str = str + k + ":" + data_str + "\n";
+    });
+    return str;
+  };
+
   cy.$('node').each(function(node, idx) {
-    node.data('tooltip', makeTippy(node, JSON.stringify(node.data('raw'))));
+    var data_dict = node.data('raw').data
+    var data_string = "<pre>" + objToString(data_dict) + "</pre>";
+    // Object.keys(data_dict).forEach(function(k) {
+    //   data_string = data_string + k + ":" + JSON.stringify(data_dict[k]) + "\n";
+    // });
+    // data_string = data_string + "</pre>"
+
+    node.data('tooltip', makeTippy(node, data_string));
   });
 
   window.cy.on('tap', 'node', function(event) {
