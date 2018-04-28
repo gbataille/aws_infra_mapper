@@ -52,8 +52,8 @@ loadJSON(function(response) {
   nodes = json_graph.nodes.map(prepare_node);
   edges = json_graph.edges.map(prepare_edge);
 
-  var cy = cytoscape({
-    container: document.getElementById('cy'),
+  window.cy = cytoscape({
+    container: document.getElementById('cy-container'),
     elements: nodes.concat(edges),
     layout: {
       name: 'random'
@@ -81,5 +81,55 @@ loadJSON(function(response) {
           "background-image": "url('/assets/icons/aws/EC2_instances_cluster.png')",
         })
   });
+  var makeTippy = function(node, text){
+    return tippy( node.popperRef(), {
+      html: (function(){
+        var div = document.createElement('div');
 
+        div.innerHTML = text;
+
+        return div;
+      })(),
+      trigger: 'manual',
+      arrow: true,
+      placement: 'right',
+      hideOnClick: false,
+      multiple: false,
+      sticky: true
+    } ).tooltips[0];
+  };
+
+  var objToString = function (obj) {
+    var str = ""
+    Object.keys(obj).forEach(function(k) {
+      var data_elem = obj[k];
+      if (data_elem instanceof Object) {
+        data_str = objToString(data_elem);
+      } else {
+        data_str = data_elem
+      }
+      str = str + k + ":" + data_str + "\n";
+    });
+    return str;
+  };
+
+  cy.$('node').each(function(node, idx) {
+    var data_dict = node.data('raw').data
+    var data_string = "<pre>" + objToString(data_dict) + "</pre>";
+    // Object.keys(data_dict).forEach(function(k) {
+    //   data_string = data_string + k + ":" + JSON.stringify(data_dict[k]) + "\n";
+    // });
+    // data_string = data_string + "</pre>"
+
+    node.data('tooltip', makeTippy(node, data_string));
+  });
+
+  window.cy.on('tap', 'node', function(event) {
+    tooltip = this.data('tooltip');
+    if (tooltip.state.visible) {
+      tooltip.hide()
+    } else {
+      tooltip.show();
+    }
+  });
 });
