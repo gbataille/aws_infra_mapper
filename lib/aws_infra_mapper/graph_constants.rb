@@ -8,6 +8,8 @@ NODE_KEY_TARGET = 'target'
 NODE_KEY_SOURCE_LABEL = 'source_label'
 NODE_KEY_TARGET_LABEL = 'target_label'
 NODE_KEY_DATA = 'data'
+NODE_KEY_PRIVATE_IP = 'private_ip'
+NODE_KEY_PUBLIC_IP = 'public_ip'
 
 NODE_TYPE_EC2_INSTANCE = 'ec2_instance'
 NODE_TYPE_EC2_INSTANCES_CLUSTER = 'ec2_instances_cluster'
