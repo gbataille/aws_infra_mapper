@@ -6,7 +6,7 @@ RSpec.describe AwsInfraMapper::Services::Aws::EC2Service do
     # See https://github.com/spulec/moto
     skip 'Skipping aws API tests: moto_server not found' unless start_moto('ec2')
 
-    @infra = setup_infrastructure
+    @infra = setup_ec2_infrastructure
   end
 
   after(:all) do
