@@ -38,10 +38,12 @@ def setup_rds_infrastructure(vpcs)
 end
 
 def create_rds_instances(vpcs)
+  db_instances = []
+
   (1..Faker::Number.non_zero_digit.to_i).each do
     vpc = random_elem(vpcs)
 
-    @rds.create_db_instance(
+    instance = @rds.create_db_instance(
       db_name: Faker::Lorem.word,
       db_instance_identifier: Faker::Lorem.word,
       db_instance_class: 'db.m5.large',
@@ -52,7 +54,11 @@ def create_rds_instances(vpcs)
       vpc_security_group_ids: [vpc[:sgs][0].group_id],
       availability_zone: random_elem(%w(a b c)),
     )
+
+    db_instances << instance
   end
+
+  db_instances
 end
 
 def create_vpc(vpc_hash)
