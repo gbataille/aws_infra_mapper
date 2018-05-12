@@ -4,13 +4,15 @@ def start_moto(aws_service)
   return false unless moto_installed?
   return true if already_started? aws_service
 
-  puts_msg_with_separator "Starting a moto server (#{aws_service}) to execute the test"
-
   moto_server = 'localhost'
-  moto_port = 3333
+  moto_port = Faker::Number.between(3000, 4000).to_i
+
+  puts_msg_with_separator "Starting a moto server on port #{moto_port} (#{aws_service})"
+
   moto_pid = spawn('moto_server', aws_service, '-H', moto_server, '-p', moto_port.to_s,
                    out: '/dev/null', err: '/dev/null')
-  @moto_servers = { aws_service => moto_pid }
+  @moto_servers ||= {}
+  @moto_servers.merge!({ aws_service => moto_pid })
 
   configure_aws_for_moto aws_service, moto_server, moto_port
   true
@@ -39,7 +41,7 @@ end
 
 def configure_aws_for_moto(aws_service, moto_server, moto_port)
   set_aws_endpoint_for(aws_service, moto_server, moto_port)
-  set_aws_credentials_for('ec2', 'dummy_key', 'dummy_secret')
+  set_aws_credentials_for(aws_service, 'dummy_key', 'dummy_secret')
 end
 
 def moto_installed?

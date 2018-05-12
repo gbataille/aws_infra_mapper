@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'aws-sdk-ec2'
+require 'aws-sdk-rds'
 
 VPCS = (1..2).map do
   {
@@ -22,13 +23,42 @@ VPCS = (1..2).map do
   }
 end
 
-def setup_infrastructure
+def setup_ec2_infrastructure
   @ec2 = ::Aws::EC2::Resource.new
 
   vpcs = []
   VPCS.each { |vpc| vpcs << create_vpc(vpc) }
-
   vpcs
+end
+
+def setup_rds_infrastructure(vpcs)
+  @rds = ::Aws::RDS::Resource.new
+
+  create_rds_instances(vpcs)
+end
+
+def create_rds_instances(vpcs)
+  db_instances = []
+
+  (1..Faker::Number.non_zero_digit.to_i).each do
+    vpc = random_elem(vpcs)
+
+    instance = @rds.create_db_instance(
+      db_name: Faker::Lorem.word,
+      db_instance_identifier: Faker::Lorem.word,
+      db_instance_class: 'db.m5.large',
+      engine: random_elem(%w(postgres mysql)),
+      master_username: Faker::Lorem.word,
+      master_user_password: Faker::Lorem.word,
+      db_security_groups: [],
+      vpc_security_group_ids: [vpc[:sgs][0].group_id],
+      availability_zone: random_elem(%w(a b c)),
+    )
+
+    db_instances << instance
+  end
+
+  db_instances
 end
 
 def create_vpc(vpc_hash)

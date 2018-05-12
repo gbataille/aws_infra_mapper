@@ -9,6 +9,8 @@ module AwsInfraMapper
           NODE_KEY_ID => ec2_instance.instance_id,
           NODE_KEY_TYPE => node_type,
           NODE_KEY_LABEL => node_label(ec2_instance, label_tmpl),
+          NODE_KEY_PUBLIC_IP => ec2_instance.public_ip_address,
+          NODE_KEY_PRIVATE_IP => ec2_instance.private_ip_address,
           NODE_KEY_DATA => deep_hash(ec2_instance)
         }
       end
