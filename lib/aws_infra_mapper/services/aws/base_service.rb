@@ -23,14 +23,14 @@ module AwsInfraMapper
           args
         end
 
-        def self.instance_meta_dict(instance)
-          instance.to_h.merge!(BaseService.tag_for_rendering(instance))
+        def self.object_meta_dict(object)
+          object.to_h.merge!(BaseService.tag_for_rendering(object))
         end
 
-        def self.tag_for_rendering(instance)
-          return {} unless instance.respond_to? :tags
+        def self.tag_for_rendering(object)
+          return {} unless object.respond_to? :tags
 
-          instance.tags.each_with_object({}) do |tag, h|
+          object.tags.each_with_object({}) do |tag, h|
             h.store("tag_#{tag.key}", tag.value)
             h
           end

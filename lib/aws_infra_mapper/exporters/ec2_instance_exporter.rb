@@ -16,13 +16,13 @@ module AwsInfraMapper
       end
 
       def node_label(ec2_instance, label_tmpl)
-        Mustache.render(label_tmpl, Services::Aws::EC2Service.instance_meta_dict(ec2_instance))
+        Mustache.render(label_tmpl, Services::Aws::BaseService.object_meta_dict(ec2_instance))
       end
 
       private
 
-      def deep_hash(h)
-        h.to_h.transform_values! do |v|
+      def deep_hash(my_hash)
+        my_hash.to_h.transform_values! do |v|
           return deep_hash v if v.is_a? Struct
           v
         end
