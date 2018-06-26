@@ -22,6 +22,9 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 30
 
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
 Style/Documentation:
   Enabled: false
 
