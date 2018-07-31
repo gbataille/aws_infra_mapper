@@ -12,7 +12,7 @@ def start_moto(aws_service)
   moto_pid = spawn('moto_server', aws_service, '-H', moto_server, '-p', moto_port.to_s,
                    out: '/dev/null', err: '/dev/null')
   @moto_servers ||= {}
-  @moto_servers.merge!({ aws_service => moto_pid })
+  @moto_servers[aws_service] = moto_pid
 
   configure_aws_for_moto aws_service, moto_server, moto_port
   true

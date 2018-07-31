@@ -5,9 +5,13 @@ module AwsInfraMapper
     class EC2InstanceGraphBuilder < BaseGraphBuilder
       def build_nodes(instances, conf, *)
         label_tmpl = conf.ec2_instance_label
-        dedup = conf.dedup_ec2_instances
 
-        dedup ? deduped_instances(instances, label_tmpl) : all_ec2_instances(instances, label_tmpl)
+        instance_nodes = instances.map do |instance|
+          ::AwsInfraMapper::Models::NodeAdapters::EC2InstanceNodeAdapter.new(instance, label_tmpl)
+        end
+
+        dedup = conf.dedup_ec2_instances
+        dedup ? dedup_nodes(instance_nodes) : instance_nodes
       end
 
       def build_edges(aws_instances, security_groups, filtered_node_ids, *)
@@ -60,36 +64,15 @@ module AwsInfraMapper
         end
       end
 
-      def deduped_instances(instances, label_tmpl)
-        exporter = Exporters::EC2InstanceExporter.new
-        idx = instances.each_with_object({}) do |instance, uniq|
-          label = exporter.node_label(instance, label_tmpl)
-          if uniq.key? label
-            upgrade_cluster_node uniq[label]
+      def dedup_nodes(instance_nodes)
+        instance_nodes.each_with_object({}) do |node, deduped_nodes|
+          if !deduped_nodes.key? node.node_label
+            deduped_nodes.merge!(node.node_label => node)
           else
-            uniq.merge!(label => exporter.as_node(instance, label_tmpl))
+            existing_node = deduped_nodes[node.node_label]
+            existing_node.add_instance_to_cluster_node
           end
-        end
-        idx.values
-      end
-
-      def upgrade_cluster_node(node)
-        type = node[NODE_KEY_TYPE]
-        if type == NODE_TYPE_EC2_INSTANCE
-          node[NODE_KEY_TYPE] = NODE_TYPE_EC2_INSTANCES_CLUSTER
-          node[NODE_KEY_LABEL] += ' (2)'
-        else
-          node[NODE_KEY_LABEL].sub!(/(.*)\s\((\d+)\)/) do
-            "#{Regexp.last_match(1)} (#{Regexp.last_match(2).to_i + 1})"
-          end
-        end
-      end
-
-      def all_ec2_instances(instances, label_tmpl)
-        exporter = Exporters::EC2InstanceExporter.new
-        instances.map do |i|
-          exporter.as_node(i, label_tmpl)
-        end.to_a
+        end.values
       end
     end
   end

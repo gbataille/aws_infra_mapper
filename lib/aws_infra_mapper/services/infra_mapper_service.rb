@@ -29,7 +29,7 @@ module AwsInfraMapper
 
       def infra_data
         {
-          GRAPH_DATA_NODES_KEY => nodes,
+          GRAPH_DATA_NODES_KEY => nodes.map(&:to_h),
           GRAPH_DATA_EDGES_KEY => edges
         }
       end
@@ -50,14 +50,16 @@ module AwsInfraMapper
       end
 
       def instance_edges
-        node_ids = instance_nodes.map { |i| i[NODE_KEY_ID] }
+        node_ids = instance_nodes.map(&:node_id)
         GraphBuilders::EC2InstanceGraphBuilder.new.build_edges(
           @ec2_instances, @security_groups, node_ids
         )
       end
 
       def instance_nodes
-        GraphBuilders::EC2InstanceGraphBuilder.new.build_nodes(@ec2_instances, @conf)
+        ::AwsInfraMapper::GraphBuilders::EC2InstanceGraphBuilder.new.build_nodes(
+          @ec2_instances, @conf
+        )
       end
     end
   end
